@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -18,6 +15,7 @@ import javax.persistence.OneToMany;
 public class Menu {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer MenuId;
 
 

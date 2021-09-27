@@ -1,20 +1,14 @@
 package com.surabi.restaurants.controller;
 
-import com.surabi.restaurants.entity.Menu;
-import com.surabi.restaurants.entity.OrderDetails;
-import com.surabi.restaurants.entity.Orders;
-import com.surabi.restaurants.entity.User;
+import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.service.RestaurantsService;
 import com.surabi.restaurants.serviceimpl.RestaurantServiceImpl;
 import com.surabi.restaurants.serviceimpl.UserLoggedDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/surabi/users")
@@ -22,7 +16,6 @@ public class UsersController {
 
 	@Autowired
 	RestaurantsService restaurantsService;
-	private Object Principal;
 
 	@GetMapping("/ListMenu")
 	public List<Menu> viewMenu() {
@@ -38,6 +31,12 @@ public class UsersController {
 		 if(orderID>0){
 		 	return "Order "+orderID+" has been created successfully";}
 		 return "Order not created as menu ID does not exist";
+	}
+
+	@PostMapping("/BulkOrder")
+	public int order(@RequestBody List<OrderBulkDTO> orderBulkDTO) {
+		return restaurantsService.createBulkItem(orderBulkDTO);
+
 	}
 
 	@GetMapping("/DeleteOrder")

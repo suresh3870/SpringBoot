@@ -1,18 +1,14 @@
 package com.surabi.restaurants.serviceimpl;
 
-import com.surabi.restaurants.entity.Menu;
-import com.surabi.restaurants.entity.OrderDetails;
-import com.surabi.restaurants.entity.Orders;
-import com.surabi.restaurants.entity.User;
+import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.repository.MenuRepository;
 import com.surabi.restaurants.repository.OrderDetailsRepository;
 import com.surabi.restaurants.repository.OrderRepository;
 import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantsService {
@@ -66,4 +62,32 @@ public class RestaurantServiceImpl implements RestaurantsService {
         }
         return savedOrderID;
     }
-}
+
+    @Override
+    public int createBulkItem(List<OrderBulkDTO> orderBulkDTO) {
+        int savedOrderID = 0;
+        Date date = new Date();
+        Orders orders = new Orders();
+        User user = new User();
+        orders.setOrderDate(date);
+        user.setUsername(UserLoggedDetailsImpl.getMyDetails());
+        orders.setUser(user);
+        Orders savedOrder = orderRepository.save(orders);
+        savedOrderID = savedOrder.getOrderId();
+        for (OrderBulkDTO orderBulkDTOtemp : orderBulkDTO) {
+                OrderDetails orderDetails = new OrderDetails();
+                orderDetails.setQuantity(orderBulkDTOtemp.getQty());
+                orderDetails.setOrders(orders);
+                System.out.println("Getting menu id"+orderBulkDTOtemp.getMenuID());
+                Menu menu = menuRepository.getOne(orderBulkDTOtemp.getMenuID());
+                System.out.println("menu details"+menu);
+                orderDetails.setMenu(menu);
+                orderDetails.setPrice(orderBulkDTOtemp.getQty() * menu.getPrice());
+                orderDetailsRepository.save(orderDetails);
+
+            }
+        return savedOrderID;
+        }
+
+    }
+
