@@ -27,6 +27,7 @@ public class User {
     boolean enabled;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Authority authority;
 
 }
