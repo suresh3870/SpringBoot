@@ -1,6 +1,7 @@
 package com.surabi.restaurants.controller;
 
 import com.surabi.restaurants.entity.User;
+import com.surabi.restaurants.entity.UserDTO;
 import com.surabi.restaurants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,8 @@ public class UserRegistrationController {
     UserService userService;
 
     @PostMapping("/register")
-    public String resister(User user) {
-        return userService.save(user);
+    public String resister(UserDTO userDTO) {
+        return userService.save(userDTO);
 
     }
 }

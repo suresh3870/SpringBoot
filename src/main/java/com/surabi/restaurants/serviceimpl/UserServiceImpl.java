@@ -1,6 +1,8 @@
 package com.surabi.restaurants.serviceimpl;
 
+import com.surabi.restaurants.entity.Authority;
 import com.surabi.restaurants.entity.User;
+import com.surabi.restaurants.entity.UserDTO;
 import com.surabi.restaurants.repository.UserRepository;
 import com.surabi.restaurants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,17 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public String save(User user) {
-        String encodedPassword  = passwordEncoder.encode(user.getPassword());
+    public String save(UserDTO userDTO) {
+        User user=new User();
+        String encodedPassword  = passwordEncoder.encode(userDTO.getPassword());
         user.setEnabled(Boolean.TRUE);
         user.setPassword(encodedPassword);
-        user.setUsername(user.getUsername());
-        user.setAuthority(auth);
-        userRepository.save(user);
-        return  "User created successfully";
+        user.setUsername(userDTO.getUsername());
+        user.setAuthority(Authority.USER);
+        if (!userRepository.existsById(userDTO.getUsername())){
+            userRepository.save(user);
+            return  "User created successfully";
+        }
+        return  "User cant be saved! Name already exist";
     }
 }

@@ -1,6 +1,9 @@
 package com.surabi.restaurants.serviceimpl;
 
+import com.surabi.restaurants.DTO.ErrorMsgDTO;
+import com.surabi.restaurants.DTO.OrderBulkDTO;
 import com.surabi.restaurants.entity.*;
+import com.surabi.restaurants.repository.BillRepository;
 import com.surabi.restaurants.repository.MenuRepository;
 import com.surabi.restaurants.repository.OrderDetailsRepository;
 import com.surabi.restaurants.repository.OrderRepository;
@@ -8,16 +11,26 @@ import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantsService {
-
     @Autowired
     MenuRepository menuRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    BillRepository billRepository;
 
     @Autowired
     OrderDetailsRepository orderDetailsRepository;
@@ -52,7 +65,7 @@ public class RestaurantServiceImpl implements RestaurantsService {
             orderDetails.setOrders(orders);
             Menu menu =menuRepository.findAll().get(menuID);
             orderDetails.setMenu(menu);
-            orderDetails.setPrice(qty * menu.getPrice());
+            orderDetails.setItemTotalprice(qty * menu.getPrice());
             Orders savedOrder = orderRepository.save(orders);
             savedOrderID= savedOrder.getOrderId();
             orderDetailsRepository.save(orderDetails);
@@ -64,7 +77,7 @@ public class RestaurantServiceImpl implements RestaurantsService {
     }
 
     @Override
-    public int createBulkItem(List<OrderBulkDTO> orderBulkDTO) {
+    public String createBulkItem(List<OrderBulkDTO> orderBulkDTO) {
         int savedOrderID = 0;
         Date date = new Date();
         Orders orders = new Orders();
@@ -82,12 +95,58 @@ public class RestaurantServiceImpl implements RestaurantsService {
                 Menu menu = menuRepository.getOne(orderBulkDTOtemp.getMenuID());
                 System.out.println("menu details"+menu);
                 orderDetails.setMenu(menu);
-                orderDetails.setPrice(orderBulkDTOtemp.getQty() * menu.getPrice());
+                orderDetails.setItemTotalprice(orderBulkDTOtemp.getQty() * menu.getPrice());
                 orderDetailsRepository.save(orderDetails);
 
             }
-        return savedOrderID;
+        return "Order ID: "+savedOrderID+ "has been created successfully";
         }
-
+    @Override
+        public List<Object[]> viewBillByID(int id) {
+        try {
+            Orders orders = orderRepository.getOne(id);
+            String user = UserLoggedDetailsImpl.getMyDetails();
+            User orderUser = orders.getUser();
+            String orderUser1 = orderUser.getUsername();
+            Query nativeQuery = null;
+            System.out.println("users from DB for order is: " + orderUser);
+            if (user == orderUser1) {
+                nativeQuery = entityManager.createNativeQuery("select b.BILLID, o.ORDER_ID, u.USERNAME,o.ORDER_DATE, m.ITEM,  d.QUANTITY, m.PRICE, d.ITEM_TOTALPRICE,b.BILL_AMOUNT, b.BILL_DATE from menu m, orders o, ORDER_DETAILS d, users u , BILL b where m.menu_id=d.menu_id  and o.ORDER_ID=d.ORDER_ID and u.USERNAME=o.USERNAME \n" +
+                        "and b.ORDER_ID=O.ORDER_ID\n" +
+                        "and o.ORDER_ID=?1");
+                nativeQuery.setParameter(1, id);
+                return nativeQuery.getResultList();
+            } else {
+                System.out.println("Order ID: " + id + "does not belongs to you");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  Collections.emptyList();
     }
+
+    @Override
+    public String checkOut(int orderId) {
+        Orders orders = new Orders();
+        Date date = new Date();
+        orders.setOrderId(orderId);
+        Bill bill =new Bill();
+        bill.setBillID(orderId);
+        bill.setBillDate(date);
+        bill.setOrders(orders);
+        Query nativeQuery =entityManager.createNativeQuery("select sum(ITEM_TOTALPRICE) from ORDER_DETAILS where ORDER_ID=?1");
+        nativeQuery.setParameter(1, orderId);
+        List amount = nativeQuery.getResultList();
+        double amt= (double) amount.get(0);
+        System.out.println("amt: "+amount);
+        bill.setBillAmount(amt);
+        System.out.println("Bill ID: "+bill.getBillID());
+        if(!billRepository.existsById(bill.getBillID()))
+        {Bill savedBillId = billRepository.save(bill);
+        int billid = savedBillId.getBillID();
+        return "Bill saved with ID "+billid;}
+        return "Bill with given order already generated";
+    }
+
+}
 

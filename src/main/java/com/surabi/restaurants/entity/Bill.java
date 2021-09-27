@@ -3,31 +3,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Date;
-
 
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class OrderDetails {
+public class Bill {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer OrderDetailsID;
+    //@GeneratedValue(strategy=GenerationType.AUTO)
+    private int billID;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="OrderId", nullable=false)
     private Orders orders;
-
-    @ManyToOne
-    @JoinColumn(name="MenuId", nullable=false)
-    private Menu menu;
-
-    private Integer Quantity;
-
-    private double itemTotalprice;
-
+    private double billAmount;
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date billDate;
 }

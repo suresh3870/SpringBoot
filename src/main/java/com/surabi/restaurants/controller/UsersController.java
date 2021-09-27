@@ -1,13 +1,11 @@
 package com.surabi.restaurants.controller;
 
+import com.surabi.restaurants.DTO.OrderBulkDTO;
 import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.service.RestaurantsService;
-import com.surabi.restaurants.serviceimpl.RestaurantServiceImpl;
-import com.surabi.restaurants.serviceimpl.UserLoggedDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.*;
 
 @RestController
@@ -21,37 +19,36 @@ public class UsersController {
 	public List<Menu> viewMenu() {
 		return restaurantsService.viewAllMenu();
 	}
-	@GetMapping("/ItemByID")
+	@GetMapping("/MenuByID")
 	public Optional<Menu> getItem(int id) {
 		return restaurantsService.getMenuById(id);
 	}
-	@GetMapping("/Order")
-	public String order(int menuID, int qty) {
-		 int orderID= restaurantsService.createOrder(menuID, qty);
-		 if(orderID>0){
-		 	return "Order "+orderID+" has been created successfully";}
-		 return "Order not created as menu ID does not exist";
-	}
+	//@GetMapping("/Order")
+	//public String order(int menuID, int qty) {
+	//	 int orderID= restaurantsService.createOrder(menuID, qty);
+	//	 if(orderID>0){
+	//	 	return "Order "+orderID+" has been created successfully";}
+	//	 return "Order not created as menu ID does not exist";
+	//}
 
-	@PostMapping("/BulkOrder")
-	public int order(@RequestBody List<OrderBulkDTO> orderBulkDTO) {
+	@PostMapping("/Order")
+	public String order(@RequestBody List<OrderBulkDTO> orderBulkDTO) {
 		return restaurantsService.createBulkItem(orderBulkDTO);
-
 	}
 
-	@GetMapping("/DeleteOrder")
-	public List<Menu> deleteOrder() {
-		return restaurantsService.viewAllMenu();
+	@PostMapping("/CheckOut")
+	public String checkOut(int orderId) {
+		return restaurantsService.checkOut(orderId);
 	}
 
 	@GetMapping("/ViewBill")
-	public List<Menu> viewBill() {
-		return restaurantsService.viewAllMenu();
+	public List<Object[]> viewBill(int id) {
+		return restaurantsService.viewBillByID(id);
 	}
 
-	@GetMapping("/MyDetails")
-	public String mydetails() {
-		return UserLoggedDetailsImpl.getMyDetails();
-	}
+	//@GetMapping("/MyDetails")
+	//public String mydetails() {
+	//	return UserLoggedDetailsImpl.getMyDetails();
+	//}
 
 }

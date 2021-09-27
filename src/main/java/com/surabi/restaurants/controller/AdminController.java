@@ -1,6 +1,9 @@
 package com.surabi.restaurants.controller;
 
+import com.surabi.restaurants.entity.Bill;
 import com.surabi.restaurants.entity.Menu;
+import com.surabi.restaurants.entity.User;
+import com.surabi.restaurants.service.AdminService;
 import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,31 +18,31 @@ import java.util.Optional;
 public class AdminController {
 
     @Autowired
-    RestaurantsService restaurantsService;
+    AdminService adminService;
 
-    @GetMapping("/CreateMenu")
-    public List<Menu> CreateMenu() {
-        return restaurantsService.viewAllMenu();
+    @GetMapping("/CreateUser")
+    public String CreateUser(User user) {
+        return adminService.CreateUser(user);
     }
 
-    @GetMapping("/UpdateMenu")
-    public Optional<Menu> UpdateMenu(int id) {
-        return restaurantsService.getMenuById(id);
+    @GetMapping("/UpdateUser")
+    public String UpdateUser(User user) {
+        return adminService.UpdateUser(user);
     }
 
-    @GetMapping("/DeleteMenu")
-    public List<Menu> deleteMenu() {
-        return restaurantsService.viewAllMenu();
+    @GetMapping("/DeleteUser")
+    public String deleteUser(String userName) {
+        return adminService.deleteUser(userName);
     }
 
-    @GetMapping("/ListMenu")
-    public List<Menu> ListMenu() {
-        return restaurantsService.viewAllMenu();
+    @GetMapping("/TotalSellByMonth")
+    public List<Object[]> totolSellByMonth(int monthID) {
+        return adminService.totolSellByMonth(monthID);
     }
 
-    @GetMapping("/GenerateBill")
-    public List<Menu> generateBill() {
-        return restaurantsService.viewAllMenu();
+    @GetMapping("/ViewAllBills")
+    public List<Bill> viewTodaysBills() {
+        return adminService.viewTodaysBills();
     }
 
 }

@@ -24,11 +24,9 @@ public class User {
     private String password;
 
     @NotNull
-    @ApiModelProperty(required = false, hidden = true)
     boolean enabled;
 
     @NotNull
-    @ApiModelProperty(required = false, hidden = true)
-    private String authority;
+    private Authority authority;
 
 }
