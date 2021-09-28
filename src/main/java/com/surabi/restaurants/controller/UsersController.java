@@ -12,43 +12,44 @@ import java.util.*;
 @RequestMapping("/surabi/users")
 public class UsersController {
 
-	@Autowired
-	RestaurantsService restaurantsService;
+    @Autowired
+    RestaurantsService restaurantsService;
 
-	@GetMapping("/ListMenu")
-	public List<Menu> viewMenu() {
-		return restaurantsService.viewAllMenu();
-	}
-	@GetMapping("/MenuByID")
-	public Optional<Menu> getItem(int menuID) {
-		return restaurantsService.getMenuById(menuID);
-	}
-	//@GetMapping("/Order")
-	//public String order(int menuID, int qty) {
-	//	 int orderID= restaurantsService.createOrder(menuID, qty);
-	//	 if(orderID>0){
-	//	 	return "Order "+orderID+" has been created successfully";}
-	//	 return "Order not created as menu ID does not exist";
-	//}
+    @GetMapping("/ListMenu")
+    public List<Menu> viewMenu() {
+        return restaurantsService.viewAllMenu();
+    }
 
-	@PostMapping("/Order")
-	public String order(@RequestBody List<OrderBulkDTO> orderBulkDTO) {
-		return restaurantsService.createBulkItem(orderBulkDTO);
-	}
+    @GetMapping("/MenuByID")
+    public Optional<Menu> getItem(int menuID) {
+        return restaurantsService.getMenuById(menuID);
+    }
+    //@GetMapping("/Order")
+    //public String order(int menuID, int qty) {
+    //	 int orderID= restaurantsService.createOrder(menuID, qty);
+    //	 if(orderID>0){
+    //	 	return "Order "+orderID+" has been created successfully";}
+    //	 return "Order not created as menu ID does not exist";
+    //}
 
-	@PostMapping("/CheckOut")
-	public String checkOut(int orderId) {
-		return restaurantsService.checkOut(orderId);
-	}
+    @PostMapping("/Order")
+    public String order(@RequestBody List<OrderBulkDTO> orderBulkDTO) {
+        return restaurantsService.createBulkItem(orderBulkDTO);
+    }
 
-	@GetMapping("/ViewBill")
-	public List<Object[]> viewBill(int id) {
-		return restaurantsService.viewBillByID(id);
-	}
+    @PostMapping("/CheckOut")
+    public String checkOut(int orderId) {
+        return restaurantsService.checkOut(orderId);
+    }
 
-	//@GetMapping("/MyDetails")
-	//public String mydetails() {
-	//	return UserLoggedDetailsImpl.getMyDetails();
-	//}
+    @GetMapping("/ViewBill")
+    public List<? extends Object> viewBill(int billID) {
+        return restaurantsService.viewBillByID(billID);
+    }
+
+    //@GetMapping("/MyDetails")
+    //public String mydetails() {
+    //	return UserLoggedDetailsImpl.getMyDetails();
+    //}
 
 }
