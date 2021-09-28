@@ -1,7 +1,6 @@
 package com.surabi.restaurants.controller;
 
-import com.surabi.restaurants.entity.User;
-import com.surabi.restaurants.entity.UserDTO;
+import com.surabi.restaurants.DTO.UserDTO;
 import com.surabi.restaurants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

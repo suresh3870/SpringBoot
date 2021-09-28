@@ -20,8 +20,8 @@ public class UsersController {
 		return restaurantsService.viewAllMenu();
 	}
 	@GetMapping("/MenuByID")
-	public Optional<Menu> getItem(int id) {
-		return restaurantsService.getMenuById(id);
+	public Optional<Menu> getItem(int menuID) {
+		return restaurantsService.getMenuById(menuID);
 	}
 	//@GetMapping("/Order")
 	//public String order(int menuID, int qty) {

@@ -25,4 +25,6 @@ public class Menu {
     @Column(name = "Price")
     private int price;
 
+    public Menu(String menu_not_found) {
+    }
 }

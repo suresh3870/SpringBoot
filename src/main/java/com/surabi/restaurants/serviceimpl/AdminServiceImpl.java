@@ -1,6 +1,5 @@
 package com.surabi.restaurants.serviceimpl;
 
-import com.surabi.restaurants.entity.Authority;
 import com.surabi.restaurants.entity.Bill;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.repository.UserRepository;
@@ -33,6 +32,8 @@ public class AdminServiceImpl implements AdminService
 
     @Override
     public String UpdateUser(User user) {
+        String encodedPassword  = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         userRepository.save(user);
         return "User "+user.getUsername()+" updated successfully";
     }

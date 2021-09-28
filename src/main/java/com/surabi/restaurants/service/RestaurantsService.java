@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface RestaurantsService {
 
     List<Menu> viewAllMenu();
-    Optional<Menu> getMenuById(int id);
+    Optional<Menu> getMenuById(int menuID);
     String createBulkItem(List<OrderBulkDTO> orderBulkDTO);
-    List<Object[]> viewBillByID(int id);
+    List<Object[]> viewBillByID(int menuID);
     List<Orders> getAllOrders();
     int createOrder(int menuID, int qty);
     String checkOut(int orderId);

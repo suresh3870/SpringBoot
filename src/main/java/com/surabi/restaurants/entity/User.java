@@ -1,6 +1,6 @@
 package com.surabi.restaurants.entity;
 import com.sun.istack.NotNull;
-import io.swagger.annotations.ApiModelProperty;
+import com.surabi.restaurants.Enum.Authority;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

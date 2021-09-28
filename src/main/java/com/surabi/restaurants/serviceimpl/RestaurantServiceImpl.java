@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
@@ -41,8 +42,13 @@ public class RestaurantServiceImpl implements RestaurantsService {
     }
 
     @Override
-    public Optional<Menu> getMenuById(int id) {
-        return menuRepository.findById(id);
+    public Optional<Menu> getMenuById(int menuID) {
+
+        try {
+          return  menuRepository.findById(menuID);
+        } catch (IllegalStateException e) {
+            return Optional.of(new Menu("Menu not found"));
+        }
     }
 
     @Override
@@ -92,14 +98,16 @@ public class RestaurantServiceImpl implements RestaurantsService {
                 orderDetails.setQuantity(orderBulkDTOtemp.getQty());
                 orderDetails.setOrders(orders);
                 System.out.println("Getting menu id"+orderBulkDTOtemp.getMenuID());
-                Menu menu = menuRepository.getOne(orderBulkDTOtemp.getMenuID());
-                System.out.println("menu details"+menu);
-                orderDetails.setMenu(menu);
-                orderDetails.setItemTotalprice(orderBulkDTOtemp.getQty() * menu.getPrice());
-                orderDetailsRepository.save(orderDetails);
-
+                try {
+                    Menu menu = menuRepository.getOne(orderBulkDTOtemp.getMenuID());
+                    orderDetails.setMenu(menu);
+                    orderDetails.setItemTotalprice(orderBulkDTOtemp.getQty() * menu.getPrice());
+                    orderDetailsRepository.save(orderDetails);
+                } catch (EntityNotFoundException e) {
+                    return "Wrong menu id: "+orderBulkDTOtemp.getMenuID();
+                }
             }
-        return "Order ID: "+savedOrderID+ "has been created successfully";
+        return "Order ID: "+savedOrderID+ " has been created successfully";
         }
     @Override
         public List<Object[]> viewBillByID(int id) {
@@ -117,7 +125,7 @@ public class RestaurantServiceImpl implements RestaurantsService {
                 nativeQuery.setParameter(1, id);
                 return nativeQuery.getResultList();
             } else {
-                System.out.println("Order ID: " + id + "does not belongs to you");
+                System.out.println("Order ID: " + id + "does not belongs to you OR no bill generated, please check out First");
             }
         } catch (Exception e) {
             e.printStackTrace();

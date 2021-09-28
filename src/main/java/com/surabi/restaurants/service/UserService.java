@@ -1,11 +1,6 @@
 package com.surabi.restaurants.service;
 
-import com.surabi.restaurants.entity.Menu;
-import com.surabi.restaurants.entity.User;
-import com.surabi.restaurants.entity.UserDTO;
-
-import java.util.List;
-import java.util.Optional;
+import com.surabi.restaurants.DTO.UserDTO;
 
 public interface UserService {
 

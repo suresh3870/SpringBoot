@@ -1,8 +1,8 @@
 package com.surabi.restaurants.serviceimpl;
 
-import com.surabi.restaurants.entity.Authority;
+import com.surabi.restaurants.Enum.Authority;
 import com.surabi.restaurants.entity.User;
-import com.surabi.restaurants.entity.UserDTO;
+import com.surabi.restaurants.DTO.UserDTO;
 import com.surabi.restaurants.repository.UserRepository;
 import com.surabi.restaurants.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
