@@ -13,7 +13,7 @@ public interface AdminService {
 
     String deleteUser(String userName);
 
-    List<Object[]> totolSellByMonth(int monthID);
+    double totalSellByMonth(int monthID);
 
-    List<Bill> viewTodaysBills();
+    List<Object[]> viewTodayBills();
 }

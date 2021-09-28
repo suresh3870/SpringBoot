@@ -1,17 +1,14 @@
 package com.surabi.restaurants.controller;
 
 import com.surabi.restaurants.entity.Bill;
-import com.surabi.restaurants.entity.Menu;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.service.AdminService;
-import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/surabi/admin")
@@ -36,13 +33,13 @@ public class AdminController {
     }
 
     @GetMapping("/TotalSellByMonth")
-    public List<Object[]> totolSellByMonth(int monthID) {
-        return adminService.totolSellByMonth(monthID);
+    public double totalSellByMonth(int monthID) {
+        return adminService.totalSellByMonth(monthID);
     }
 
     @GetMapping("/ViewAllBills")
-    public List<Bill> viewTodaysBills() {
-        return adminService.viewTodaysBills();
+    public List<Object[]> viewTodaysBills() {
+        return adminService.viewTodayBills();
     }
 
 }

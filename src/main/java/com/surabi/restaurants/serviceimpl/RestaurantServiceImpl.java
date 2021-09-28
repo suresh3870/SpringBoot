@@ -1,6 +1,5 @@
 package com.surabi.restaurants.serviceimpl;
 
-import com.surabi.restaurants.DTO.ErrorMsgDTO;
 import com.surabi.restaurants.DTO.OrderBulkDTO;
 import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.repository.BillRepository;
@@ -9,6 +8,7 @@ import com.surabi.restaurants.repository.OrderDetailsRepository;
 import com.surabi.restaurants.repository.OrderRepository;
 import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,8 +16,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 @Service
 public class RestaurantServiceImpl implements RestaurantsService {
@@ -118,7 +117,7 @@ public class RestaurantServiceImpl implements RestaurantsService {
             String orderUser1 = orderUser.getUsername();
             Query nativeQuery = null;
             System.out.println("users from DB for order is: " + orderUser);
-            if (user == orderUser1) {
+            if (user == orderUser1 ) {
                 nativeQuery = entityManager.createNativeQuery("select b.BILLID, o.ORDER_ID, u.USERNAME,o.ORDER_DATE, m.ITEM,  d.QUANTITY, m.PRICE, d.ITEM_TOTALPRICE,b.BILL_AMOUNT, b.BILL_DATE from menu m, orders o, ORDER_DETAILS d, users u , BILL b where m.menu_id=d.menu_id  and o.ORDER_ID=d.ORDER_ID and u.USERNAME=o.USERNAME \n" +
                         "and b.ORDER_ID=O.ORDER_ID\n" +
                         "and o.ORDER_ID=?1");
