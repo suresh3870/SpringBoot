@@ -1,5 +1,6 @@
 package com.surabi.restaurants.entity;
 
+import com.surabi.restaurants.DTO.BillDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

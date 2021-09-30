@@ -1,5 +1,7 @@
 package com.surabi.restaurants.controller;
 
+import com.surabi.restaurants.DTO.BillDTO;
+import com.surabi.restaurants.DTO.BillDetailsDTO;
 import com.surabi.restaurants.DTO.OrderBulkDTO;
 import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.service.RestaurantsService;
@@ -42,9 +44,14 @@ public class UsersController {
         return restaurantsService.checkOut(orderId);
     }
 
-    @GetMapping("/ViewBill")
-    public List<? extends Object> viewBill(int billID) {
-        return restaurantsService.viewBillByID(billID);
+   // @GetMapping("/ViewBill")
+   // public List<? extends Object> viewBill(int billID) {
+     //   return restaurantsService.viewBillByID(billID);
+    //}
+
+    @GetMapping("/ViewMyBill")
+    public Object ViewMyBill(int billID) {
+        return restaurantsService.viewMyBill(billID);
     }
 
     //@GetMapping("/MyDetails")

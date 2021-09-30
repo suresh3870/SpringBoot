@@ -21,4 +21,5 @@ public interface RestaurantsService {
     int createOrder(int menuID, int qty);
 
     String checkOut(int orderId);
+    public Object viewMyBill(int billID);
 }

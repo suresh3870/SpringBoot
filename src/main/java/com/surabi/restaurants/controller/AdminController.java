@@ -38,7 +38,7 @@ public class AdminController {
     }
 
     @GetMapping("/ViewAllBills")
-    public List<Object[]> viewTodaysBills() {
+    public Object viewTodaysBills() {
         return adminService.viewTodayBills();
     }
 

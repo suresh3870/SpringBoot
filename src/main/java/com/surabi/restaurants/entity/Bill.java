@@ -1,4 +1,5 @@
 package com.surabi.restaurants.entity;
+import com.surabi.restaurants.DTO.BillDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,18 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+@SqlResultSetMapping(name="BillDTOMapping",
+        classes = {
+                @ConstructorResult(targetClass = BillDetailsDTO.class,
+                        columns = {@ColumnResult(name="BILL_ID", type = Integer.class),
+                                @ColumnResult(name="USERNAME", type = String.class),
+                                @ColumnResult(name="ITEM", type = String.class),
+                                @ColumnResult(name="QTY", type = Integer.class),
+                                @ColumnResult(name="PRICE", type = Integer.class),
+                                @ColumnResult(name="ITEM_TOTALPRICE", type = Integer.class),
+                                @ColumnResult(name="BILL_AMOUNT", type = double.class)
+                        }
+                )})
 @Data
 @Entity
 @Builder
