@@ -1,11 +1,12 @@
 package com.surabi.restaurants.controller;
 
-import com.surabi.restaurants.DTO.BillDTO;
 import com.surabi.restaurants.DTO.BillDetailsDTO;
 import com.surabi.restaurants.DTO.OrderBulkDTO;
 import com.surabi.restaurants.entity.*;
+import com.surabi.restaurants.response.APIResponse;
 import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -50,7 +51,7 @@ public class UsersController {
     //}
 
     @GetMapping("/ViewMyBill")
-    public Object ViewMyBill(int billID) {
+    public APIResponse<List<BillDetailsDTO>> ViewMyBill(int billID) {
         return restaurantsService.viewMyBill(billID);
     }
 

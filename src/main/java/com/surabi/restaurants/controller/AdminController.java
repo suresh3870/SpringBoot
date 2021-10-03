@@ -1,13 +1,16 @@
 package com.surabi.restaurants.controller;
 
+import com.surabi.restaurants.DTO.BillDTO;
 import com.surabi.restaurants.entity.Bill;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,7 +21,7 @@ public class AdminController {
     AdminService adminService;
 
     @GetMapping("/CreateUser")
-    public String CreateUser(User user) {
+    public String CreateUser(@Valid User user) {
         return adminService.CreateUser(user);
     }
 
@@ -38,7 +41,7 @@ public class AdminController {
     }
 
     @GetMapping("/ViewAllBills")
-    public Object viewTodaysBills() {
+    public List<BillDTO>  viewTodaysBills() {
         return adminService.viewTodayBills();
     }
 

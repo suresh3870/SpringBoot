@@ -2,6 +2,7 @@ package com.surabi.restaurants.serviceimpl;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -16,8 +17,7 @@ public class UserLoggedDetailsImpl {
     }
     public static String  getUserRole() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List list = new ArrayList(((UserDetails) principal).getAuthorities());
-        return "ADMIN";
+        return ((UserDetails) principal).getAuthorities().toString();
     }
 }
 

@@ -1,5 +1,6 @@
 package com.surabi.restaurants.service;
 
+import com.surabi.restaurants.DTO.BillDTO;
 import com.surabi.restaurants.DTO.BillDetailsDTO;
 import com.surabi.restaurants.entity.User;
 
@@ -16,5 +17,5 @@ public interface AdminService {
 
     double totalSellByMonth(int monthID);
 
-    Object viewTodayBills();
+    List<BillDTO>  viewTodayBills();
 }

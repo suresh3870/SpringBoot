@@ -1,4 +1,4 @@
-package com.surabi.restaurants.DTO;
+package com.surabi.restaurants.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class OrderDetailsDTO {
-    private String ITEM;
-    private int QTY;
-    private int PRICE;
-    private int ITEM_TOTALPRICE;
+public class APIResponse<T> {
+
+    private String status;
+    private String message;
+    private T data;
 }

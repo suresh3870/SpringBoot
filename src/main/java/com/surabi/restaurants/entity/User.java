@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 
 @Data
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
 public class User {
     @Id
-    @NotNull
+    @NotEmpty(message = "Id must not be null")
     @Column(length=50)
     private String username;
 

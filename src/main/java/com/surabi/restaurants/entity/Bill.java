@@ -1,4 +1,5 @@
 package com.surabi.restaurants.entity;
+import com.surabi.restaurants.DTO.BillDTO;
 import com.surabi.restaurants.DTO.BillDetailsDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,16 @@ import java.util.Date;
                                 @ColumnResult(name="QTY", type = Integer.class),
                                 @ColumnResult(name="PRICE", type = Integer.class),
                                 @ColumnResult(name="ITEM_TOTALPRICE", type = Integer.class),
+                                @ColumnResult(name="BILL_AMOUNT", type = double.class)
+                        }
+                )})
+
+@SqlResultSetMapping(name="BillViewMapping",
+        classes = {
+                @ConstructorResult(targetClass = BillDTO.class,
+                        columns = {@ColumnResult(name="BILL_ID", type = Integer.class),
+                                @ColumnResult(name="USERNAME", type = String.class),
+                                @ColumnResult(name="BILL_DATE", type = String.class),
                                 @ColumnResult(name="BILL_AMOUNT", type = double.class)
                         }
                 )})

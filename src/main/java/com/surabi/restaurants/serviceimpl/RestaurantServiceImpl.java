@@ -1,21 +1,25 @@
 package com.surabi.restaurants.serviceimpl;
 
-import com.surabi.restaurants.DTO.BillDTO;
-import com.surabi.restaurants.DTO.BillDetailsDTO;
-import com.surabi.restaurants.DTO.ErrorMsgDTO;
-import com.surabi.restaurants.DTO.OrderBulkDTO;
+import com.surabi.restaurants.DTO.*;
 import com.surabi.restaurants.entity.*;
 import com.surabi.restaurants.repository.BillRepository;
 import com.surabi.restaurants.repository.MenuRepository;
 import com.surabi.restaurants.repository.OrderDetailsRepository;
 import com.surabi.restaurants.repository.OrderRepository;
+import com.surabi.restaurants.response.APIResponse;
 import com.surabi.restaurants.service.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -107,36 +111,6 @@ public class RestaurantServiceImpl implements RestaurantsService {
     }
 
     @Override
-    public List<?> viewBillByID(int billID) {
-        List<ErrorMsgDTO> listBillNotFound = new ArrayList<ErrorMsgDTO>();
-        listBillNotFound.add(new ErrorMsgDTO("Bill "+billID+" not found"));
-        List<ErrorMsgDTO> OtherBill = new ArrayList<ErrorMsgDTO>();
-        OtherBill.add(new ErrorMsgDTO("Bill "+billID+" does not belong to you!"));
-        if (billRepository.existsById(billID)) {
-            Orders orders = orderRepository.getOne(billID);
-            String user = UserLoggedDetailsImpl.getMyDetails();
-            User orderUser = orders.getUser();
-            String orderUser1 = orderUser.getUsername();
-            Query nativeQuery = null;
-            System.out.println("users from DB for order is: " + orderUser);
-            if (user == orderUser1) {
-                nativeQuery = entityManager.createNativeQuery("select b.BILLID as BILL_ID, o.ORDER_ID as ORDER_ID, u.USERNAME as USERNAME,o.ORDER_DATE as ORDER_DATE, m.ITEM as ITEM,  d.QUANTITY as QTY, m.PRICE as PRICE, d.ITEM_TOTALPRICE as ITEM_TOTALPRICE,b.BILL_AMOUNT as BILL_AMOUNT, b.BILL_DATE as BILL_DATE from menu m, orders o, ORDER_DETAILS d, users u , BILL b where m.menu_id=d.menu_id  and o.ORDER_ID=d.ORDER_ID and u.USERNAME=o.USERNAME \n" +
-                        "and b.ORDER_ID=O.ORDER_ID\n" +
-                        "and o.ORDER_ID=?1");
-                nativeQuery.setParameter(1, billID);
-                List<BillDTO> list = (List<BillDTO>) nativeQuery.getResultList();
-                return list;
-            } else {
-                System.out.println("Bill ID: " + billID + "does not belongs to you");
-                return OtherBill;
-            }
-        } else {
-            System.out.println("Bill ID: " + billID + "does not exist");
-            return listBillNotFound;
-        }
-    }
-
-    @Override
     public String checkOut(int orderId) {
         Orders orders = new Orders();
         Date date = new Date();
@@ -155,10 +129,12 @@ public class RestaurantServiceImpl implements RestaurantsService {
             System.out.println("Bill ID: " + bill.getBillID());
             if (!billRepository.existsById(bill.getBillID())) {
                 String loggedUser = UserLoggedDetailsImpl.getMyDetails();
+                String role = UserLoggedDetailsImpl.getUserRole().toString();
+                System.out.println("Logged user role is "+role);
                 Orders dborders = orderRepository.getOne(orderId);
                 User orderUserDetails = dborders.getUser();
                 String orderUser = orderUserDetails.getUsername();
-                if (orderUser == loggedUser) {
+                if (orderUser == loggedUser || role.equals("[ADMIN]")) {
                     Bill savedBillId = billRepository.save(bill);
                     int billid = savedBillId.getBillID();
                     return "Bill saved with ID " + billid;
@@ -173,36 +149,40 @@ public class RestaurantServiceImpl implements RestaurantsService {
     }
 
     @Override
-    public Object viewMyBill(int billID) {
-        List<BillDetailsDTO> listBillNotFound = new ArrayList<BillDetailsDTO>();
-        listBillNotFound.add(new BillDetailsDTO("Bill "+billID+" not found"));
-        List<BillDetailsDTO> OtherBill = new ArrayList<BillDetailsDTO>();
-        OtherBill.add(new BillDetailsDTO("Bill "+billID+" does not belong to you!"));
+    public APIResponse<List<BillDetailsDTO>> viewMyBill(int billID) {
+        List<BillDetailsDTO> billDetailsDTOS = new ArrayList<>();
         if (billRepository.existsById(billID)) {
             Orders orders = orderRepository.getOne(billID);
             String user = UserLoggedDetailsImpl.getMyDetails();
             User orderUser = orders.getUser();
             String orderUser1 = orderUser.getUsername();
-            //Query nativeQuery = null;
             System.out.println("users from DB for order is: " + orderUser);
             if (user == orderUser1) {
                 Query nativeQuery = entityManager.createNativeQuery("select b.BILLID as BILL_ID,  u.USERNAME as USERNAME, m.ITEM as ITEM,  d.QUANTITY as QTY, m.PRICE as PRICE, d.ITEM_TOTALPRICE as ITEM_TOTALPRICE,b.BILL_AMOUNT as BILL_AMOUNT from menu m, orders o, ORDER_DETAILS d, users u , BILL b where m.menu_id=d.menu_id  and o.ORDER_ID=d.ORDER_ID and u.USERNAME=o.USERNAME  \n" +
                         "                        and b.ORDER_ID=O.ORDER_ID\n" +
                         "                        and o.ORDER_ID=1", "BillDTOMapping");
-                //nativeQuery.setParameter(1, billID);
-                List<BillDetailsDTO> list =  nativeQuery.getResultList();
-                Map<Integer, Map<String, Map<Double, List<BillDetailsDTO>>>> map = list.stream()
-                        .collect(Collectors.groupingBy(BillDetailsDTO::getBILL_ID,
-                                Collectors.groupingBy(BillDetailsDTO::getUSERNAME,
-                                        Collectors.groupingBy(BillDetailsDTO::getBILL_AMOUNT))));
-                return map;
+                List<BillDetailsDTO> list = nativeQuery.getResultList();
+                BillOrderDetailsDTO billOrderDetailsDTO = new BillOrderDetailsDTO();
+                BillDetailsDTO billDetailsDTO = list.get(1);
+                billOrderDetailsDTO.setBILL_ID(billDetailsDTO.getBILL_ID());
+                billOrderDetailsDTO.setUSERNAME(billDetailsDTO.getUSERNAME());
+                billOrderDetailsDTO.setBILL_AMOUNT(billDetailsDTO.getBILL_AMOUNT());
+                List<BillDetailDTO> orderDetailDTO = new ArrayList<>();
+                for (BillDetailsDTO billDetailsDTO1 : list) {
+                    BillDetailDTO billDetailDTO1 = new BillDetailDTO();
+                    billDetailDTO1.setITEM(billDetailsDTO1.getITEM());
+                    billDetailDTO1.setQTY(billDetailsDTO1.getQTY());
+                    billDetailDTO1.setPRICE(billDetailsDTO1.getPRICE());
+                    billDetailDTO1.setITEM_TOTALPRICE(billDetailsDTO1.getITEM_TOTALPRICE());
+                    orderDetailDTO.add(billDetailDTO1);
+                }
+                billOrderDetailsDTO.setBillDetailDTO(orderDetailDTO);
+                return new APIResponse("200", "success!", billOrderDetailsDTO);
             } else {
-                System.out.println("Bill ID: " + billID + "does not belongs to you");
-                return OtherBill;
+                return new APIResponse("400", "Bill ID: " + billID + " does not belongs to you!", billDetailsDTOS);
             }
         } else {
-            System.out.println("Bill ID: " + billID + "does not exist");
-            return listBillNotFound;
+            return new APIResponse("400", "Bill ID: " + billID + " does not exist", billDetailsDTOS);
         }
     }
 

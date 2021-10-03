@@ -1,5 +1,6 @@
 package com.surabi.restaurants.serviceimpl;
 
+import com.surabi.restaurants.DTO.BillDTO;
 import com.surabi.restaurants.DTO.BillDetailsDTO;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.repository.BillRepository;
@@ -32,29 +33,42 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public String CreateUser(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setEnabled(Boolean.TRUE);
-        user.setPassword(encodedPassword);
-        user.setUsername(user.getUsername());
-        user.setAuthority(user.getAuthority());
-        userRepository.save(user);
-        return "User created successfully";
+        if(!userRepository.existsById(user.getUsername())) {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setEnabled(Boolean.TRUE);
+            user.setPassword(encodedPassword);
+            user.setUsername(user.getUsername());
+            user.setAuthority(user.getAuthority());
+            userRepository.save(user);
+            return "User created successfully";
+        }
+        else {
+            return "User "+user.getUsername()+ " already exist, please update if you wish to change user";
+        }
     }
 
     @Override
     public String UpdateUser(User user) {
+        if(userRepository.existsById(user.getUsername())){
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
         return "User " + user.getUsername() + " updated successfully";
+        }
+        else {
+            return "User "+user.getUsername()+ " does not exist";
+        }
     }
 
     @Override
     public String deleteUser(String userName) {
-
-        userRepository.deleteById(userName);
-        return userName + " deleted successfully from DB";
-
+        if(userRepository.existsById(userName)) {
+            userRepository.deleteById(userName);
+            return userName + " deleted successfully from DB";
+        }
+        else {
+            return "User "+userName+ " does not exist";
+        }
     }
 
     @Override
@@ -67,15 +81,11 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Object viewTodayBills() {
-        Query nativeQuery = entityManager.createNativeQuery("select b.BILLID as BILL_ID,  u.USERNAME as USERNAME, m.ITEM as ITEM,  d.QUANTITY as QTY, m.PRICE as PRICE, d.ITEM_TOTALPRICE as ITEM_TOTALPRICE,b.BILL_AMOUNT as BILL_AMOUNT from menu m, orders o, ORDER_DETAILS d, users u , BILL b where m.menu_id=d.menu_id  and o.ORDER_ID=d.ORDER_ID and u.USERNAME=o.USERNAME  \n" +
-                        "                        and b.ORDER_ID=O.ORDER_ID\n" +
-                        "                        and CAST(b.BILL_DATE as DATE)=TODAY", "BillDTOMapping" );
-        List<BillDetailsDTO> list =  nativeQuery.getResultList();
-        Map<Integer, Map<String, Map<Double, List<BillDetailsDTO>>>> map = list.stream()
-                .collect(Collectors.groupingBy(BillDetailsDTO::getBILL_ID,
-                        Collectors.groupingBy(BillDetailsDTO::getUSERNAME,
-                                Collectors.groupingBy(BillDetailsDTO::getBILL_AMOUNT))));
-        return map;
+    public List<BillDTO>  viewTodayBills() {
+        Query nativeQuery = entityManager.createNativeQuery("select distinct b.BILLID as BILL_ID,  u.USERNAME as USERNAME, b.BILL_DATE as BILL_DATE ,b.BILL_AMOUNT as BILL_AMOUNT from  users u , BILL b, ORDERS o where  u.USERNAME=o.USERNAME  \n" +
+                "and o.username=u.username\n" +
+                "and CAST(b.BILL_DATE as DATE)=TODAY","BillViewMapping" );
+        List<BillDTO> list =  nativeQuery.getResultList();
+        return list;
     }
 }
