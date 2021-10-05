@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public String save(UserDTO userDTO) {
+    public String saveUser(UserDTO userDTO) {
         User user=new User();
         String encodedPassword  = passwordEncoder.encode(userDTO.getPassword());
         user.setEnabled(Boolean.TRUE);

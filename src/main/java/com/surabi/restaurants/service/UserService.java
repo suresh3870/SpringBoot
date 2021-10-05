@@ -4,5 +4,5 @@ import com.surabi.restaurants.DTO.UserDTO;
 
 public interface UserService {
 
-    String save(UserDTO userDTO);
+    String saveUser(UserDTO userDTO);
 }

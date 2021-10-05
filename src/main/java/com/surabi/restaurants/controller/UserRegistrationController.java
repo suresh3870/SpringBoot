@@ -16,7 +16,7 @@ public class UserRegistrationController {
 
     @PostMapping("/register")
     public String resister(UserDTO userDTO) {
-        return userService.save(userDTO);
+        return userService.saveUser(userDTO);
 
     }
 }
