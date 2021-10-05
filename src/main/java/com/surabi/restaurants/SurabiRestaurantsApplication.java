@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SurabiRestaurantsApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SurabiRestaurantsApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SurabiRestaurantsApplication.class, args);
+    }
 
 }

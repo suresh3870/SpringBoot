@@ -56,33 +56,6 @@ public class RestaurantServiceImpl implements RestaurantsService {
     }
 
     @Override
-    public int createOrder(int menuID, int qty) {
-
-        int savedOrderID = 0;
-        if (menuRepository.existsById(menuID)) {
-            Date date = new Date();
-            Orders orders = new Orders();
-            OrderDetails orderDetails = new OrderDetails();
-            User user = new User();
-            orders.setOrderDate(date);
-            user.setUsername(UserLoggedDetailsImpl.getMyDetails());
-            orders.setUser(user);
-            orderDetails.setQuantity(qty);
-            orderDetails.setOrders(orders);
-            Menu menu = menuRepository.findAll().get(menuID);
-            orderDetails.setMenu(menu);
-            orderDetails.setItemTotalprice(qty * menu.getPrice());
-            Orders savedOrder = orderRepository.save(orders);
-            savedOrderID = savedOrder.getOrderId();
-            orderDetailsRepository.save(orderDetails);
-            return savedOrderID;
-        } else {
-            System.out.println("No menu with provided ID");
-        }
-        return savedOrderID;
-    }
-
-    @Override
     public String createBulkItem(List<OrderBulkDTO> orderBulkDTO) {
         int savedOrderID = 0;
         Date date = new Date();
@@ -123,6 +96,7 @@ public class RestaurantServiceImpl implements RestaurantsService {
             Query nativeQuery = entityManager.createNativeQuery("select sum(ITEM_TOTALPRICE) from ORDER_DETAILS where ORDER_ID=?1");
             nativeQuery.setParameter(1, orderId);
             List amount = nativeQuery.getResultList();
+            System.out.println("List from query "+amount.get(0));
             double amt = (double) amount.get(0);
             System.out.println("amt: " + amount);
             bill.setBillAmount(amt);

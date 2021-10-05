@@ -20,8 +20,6 @@ public interface RestaurantsService {
 
     List<Orders> getAllOrders();
 
-    int createOrder(int menuID, int qty);
-
     String checkOut(int orderId);
 
     public APIResponse<List<BillDetailsDTO>> viewMyBill(int billID);

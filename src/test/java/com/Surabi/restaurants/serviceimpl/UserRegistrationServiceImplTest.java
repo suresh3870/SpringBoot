@@ -4,26 +4,22 @@ import com.surabi.restaurants.DTO.UserDTO;
 import com.surabi.restaurants.Enum.Authority;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.repository.UserRepository;
-import com.surabi.restaurants.serviceimpl.UserServiceImpl;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.Assert.*;
-
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class UserServiceImplTest {
+public class UserRegistrationServiceImplTest {
     @InjectMocks
-    UserServiceImpl userServiceImpl;
+    UserRegistrationServiceImpl userServiceImpl;
     @Mock
     UserRepository userRepository;
     @Mock

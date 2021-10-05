@@ -4,13 +4,13 @@ import com.surabi.restaurants.Enum.Authority;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.DTO.UserDTO;
 import com.surabi.restaurants.repository.UserRepository;
-import com.surabi.restaurants.service.UserService;
+import com.surabi.restaurants.service.UserRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserRegistrationServiceImpl implements UserRegistrationService {
     static final String auth="USER";
     @Autowired
     PasswordEncoder passwordEncoder;
