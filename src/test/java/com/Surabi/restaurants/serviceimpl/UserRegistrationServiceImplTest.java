@@ -34,7 +34,7 @@ public class UserRegistrationServiceImplTest {
     @Test
     public void shouldSaveUser() {
         User user= new User();
-        User newUser=new User("Ramesh","Ramesh",true,Authority.USER);
+        User newUser=new User("Ramesh","Ramesh",true,Authority.ROLE_USER);
         UserDTO userDTO = new UserDTO(newUser.getUsername(), newUser.getPassword());
         //userRepository = Mockito.mock(UserRepository.class);
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(newUser);

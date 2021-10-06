@@ -1,5 +1,5 @@
 package com.surabi.restaurants.Enum;
 
 public enum UserAuthority {
-    USER
+    ROLE_USER
 }

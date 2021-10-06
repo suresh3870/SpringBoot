@@ -21,7 +21,7 @@ public class AdminController {
     AdminService adminService;
 
     @GetMapping("/CreateUser")
-    public String CreateUser(@Valid User user) {
+    public String CreateUser(User user) {
         return adminService.CreateUser(user);
     }
 

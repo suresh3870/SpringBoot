@@ -25,7 +25,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         user.setEnabled(Boolean.TRUE);
         user.setPassword(encodedPassword);
         user.setUsername(userDTO.getUsername());
-        user.setAuthority(Authority.USER);
+        user.setAuthority(Authority.ROLE_USER);
         if (!userRepository.existsById(userDTO.getUsername())){
             userRepository.save(user);
             return  "User created successfully";
