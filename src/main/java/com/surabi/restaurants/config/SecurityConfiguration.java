@@ -1,20 +1,28 @@
 package com.surabi.restaurants.config;
 
+import com.surabi.restaurants.Enum.Authority;
+import com.surabi.restaurants.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -58,4 +66,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/h2-console/**");
 
     }
+   /*@Bean
+   @Override
+    public UserDetailsService userDetailsService(){
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_ADMIN");
+        GrantedAuthority authority1 = new SimpleGrantedAuthority("ROLE_USER");
+        UserDetails adminUserDetails = (UserDetails)new User("sk", "sk",true, Authority.ROLE_ADMIN);
+        UserDetails basicUser = (UserDetails)new User("ms", "ms", true, Authority.ROLE_USER);
+        return new InMemoryUserDetailsManager(Arrays.asList(adminUserDetails, basicUser));
+    }*/
 }

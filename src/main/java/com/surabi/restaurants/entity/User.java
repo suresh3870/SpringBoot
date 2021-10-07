@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
@@ -31,4 +33,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+
+    public User(String sk, String sk1, boolean enabled, GrantedAuthority authority) {
+    }
 }
