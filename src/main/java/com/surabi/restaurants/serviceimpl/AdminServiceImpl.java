@@ -1,7 +1,6 @@
 package com.surabi.restaurants.serviceimpl;
 
 import com.surabi.restaurants.DTO.BillDTO;
-import com.surabi.restaurants.DTO.BillDetailsDTO;
 import com.surabi.restaurants.entity.User;
 import com.surabi.restaurants.repository.BillRepository;
 import com.surabi.restaurants.repository.UserRepository;
@@ -15,8 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -87,5 +85,14 @@ public class AdminServiceImpl implements AdminService {
                 "and CAST(b.BILL_DATE as DATE)=TODAY","BillViewMapping" );
         List<BillDTO> list =  nativeQuery.getResultList();
         return list;
+    }
+
+    @Override
+    public Optional<User> findUser(String userName) {
+        if(userRepository.existsById(userName)) {
+            return userRepository.findById(userName);
+
+        }
+        return null;
     }
 }
