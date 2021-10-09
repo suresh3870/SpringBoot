@@ -59,7 +59,6 @@ public class UserRegistrationControllerTest {
         String response = responseOfRequest.getResponse().getContentAsString();
         assertEquals(response, "User created successfully");
 
-
     }
 
 }

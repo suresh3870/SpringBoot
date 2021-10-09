@@ -50,6 +50,5 @@ public class UsersControllerTest {
         MvcResult responseOfRequest = mockMvc.perform(get("/surabi/admin/CreateUser").with(csrf()))
                 .andExpect(status().is4xxClientError()).andReturn();
 
-
     }
 }

@@ -82,7 +82,7 @@ public class AdminServiceImplTest {
     }
 
     @Test
-    public void shouldReturnUser() throws Exception {
+    public void shouldFindUserByID() throws Exception {
         Mockito.when(userRepository.existsById(user.getUsername())).thenReturn(true);
         Mockito.when(userRepository.findById(user.getUsername())).thenReturn(userOptional);
         Optional<User> result = adminServiceImpl.findUser(user.getUsername());

@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RunWith(MockitoJUnitRunner.class)
 public class UserRegistrationServiceImplTest {
     @InjectMocks
-    UserRegistrationServiceImpl userServiceImpl;
+    UserRegistrationServiceImpl userRegistrationServiceImpl;
     @Mock
     UserRepository userRepository;
     @Mock
@@ -32,13 +32,24 @@ public class UserRegistrationServiceImplTest {
     }
 
     @Test
-    public void shouldSaveUser() {
+    public void shouldRegisterUser() {
         User user= new User();
         User newUser=new User("Ramesh","Ramesh",true,Authority.ROLE_USER);
         UserDTO userDTO = new UserDTO(newUser.getUsername(), newUser.getPassword());
         //userRepository = Mockito.mock(UserRepository.class);
         Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(newUser);
-        String result = userServiceImpl.saveUser(userDTO);
+        String result = userRegistrationServiceImpl.saveUser(userDTO);
         Assert.assertEquals("User created successfully", result);
+    }
+
+    @Test
+    public void shouldNotRegisterUserAsAlreadyExist() {
+        User user= new User();
+        User newUser=new User("Ramesh","",true,Authority.ROLE_USER);
+        UserDTO userDTO = new UserDTO(newUser.getUsername(), newUser.getPassword());
+        //userRepository = Mockito.mock(UserRepository.class);
+        Mockito.when(userRepository.existsById(newUser.getUsername())).thenReturn(true);
+        String result = userRegistrationServiceImpl.saveUser(userDTO);
+        Assert.assertEquals("User cant be saved! Name already exist", result);
     }
 }
