@@ -7,12 +7,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 
-@Data
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 
+@Entity
 public class Orders {
 
     @Id
@@ -28,5 +24,36 @@ public class Orders {
     @JoinColumn(name="username", nullable=false)
     private User user;
 
+    public Integer getOrderId() {
+        return OrderId;
+    }
 
+    public void setOrderId(Integer orderId) {
+        OrderId = orderId;
+    }
+
+    public Date getOrderDate() {
+        return OrderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        OrderDate = orderDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Orders(Integer orderId, Date orderDate, User user) {
+        OrderId = orderId;
+        OrderDate = orderDate;
+        this.user = user;
+    }
+
+    public Orders() {
+    }
 }

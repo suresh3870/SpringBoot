@@ -31,11 +31,8 @@ import java.util.Date;
                                 @ColumnResult(name="BILL_AMOUNT", type = double.class)
                         }
                 )})
-@Data
+
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Bill {
     @Id
     //@GeneratedValue(strategy=GenerationType.AUTO)
@@ -47,4 +44,46 @@ public class Bill {
     private double billAmount;
     @Temporal(TemporalType.TIMESTAMP)
     public Date billDate;
+
+    public int getBillID() {
+        return billID;
+    }
+
+    public void setBillID(int billID) {
+        this.billID = billID;
+    }
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
+    }
+
+    public double getBillAmount() {
+        return billAmount;
+    }
+
+    public void setBillAmount(double billAmount) {
+        this.billAmount = billAmount;
+    }
+
+    public Date getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(Date billDate) {
+        this.billDate = billDate;
+    }
+
+    public Bill(int billID, Orders orders, double billAmount, Date billDate) {
+        this.billID = billID;
+        this.orders = orders;
+        this.billAmount = billAmount;
+        this.billDate = billDate;
+    }
+
+    public Bill() {
+    }
 }
